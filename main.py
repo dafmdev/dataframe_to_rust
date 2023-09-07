@@ -24,16 +24,25 @@ class CountersAccesor:
     def is_prime_rust(self):
         return counts.is_prime(self._series_list)
 
-data = pd.Series(np.random.randint(0, 999, size=100_000_000))
+array = np.random.randint(0, 999, size=100_000_000)
+data_pandas = pd.Series(array)
+data_polars = pl.from_numpy(array)
+
 
 start = time()
-data.counters.is_prime_python()
+data_pandas.counters.is_prime_python()
 end = time()
 
-print(f"Time Python: {end-start}")
+print(f"Time Python + Pandas: {end-start}")
 
 start = time()
-data.counters.is_prime_rust()
+data_pandas.counters.is_prime_rust()
 end = time()
 
-print(f"Time Rust: {end-start}")
+print(f"Time Rust + Pandas: {end-start}")
+
+start = time()
+counts.is_prime_pl(data_polars, "column_0")
+end = time()
+
+print(f"Time Rust + Polars: {end-start}")
